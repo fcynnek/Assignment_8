@@ -25,12 +25,12 @@ public class MultiThreadApplication {
 		List<Integer> listOfNumbers = new ArrayList<Integer>();
 		
 		for (int i=0; i<1000; i++) {
-			listOfNumbers.addAll(baseCode.getNumbers());
+//			listOfNumbers.addAll(baseCode.getNumbers());
 //			System.out.println(listOfNumbers);
 			
 			
-//			CompletableFuture.supplyAsync(() -> new Assignment8(), cachedPool)
-//							 .thenApplyAsync(baseCode.getNumbers(), cpuPool)
+			CompletableFuture.supplyAsync(() -> new Assignment8(), cachedPool)
+							 .thenApplyAsync(baseCode.getNumbers(), cpuPool)
 //							 .thenAcceptAsync((Consumer<? super Assignment8>) baseCode.getNumbers(), cpuPool);
 		}
 		
