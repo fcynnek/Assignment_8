@@ -21,7 +21,7 @@ public class MultiThreadApplication {
 		
 		Assignment8 baseCode = new Assignment8();
 		ExecutorService cachedPool = Executors.newCachedThreadPool();
-		ExecutorService cpuPool = Executors.newFixedThreadPool(5);
+//		ExecutorService cpuPool = Executors.newFixedThreadPool(5);
 		List<Integer> listOfNumbers = new ArrayList<Integer>();
 		
 		for (int i=0; i<1000; i++) {
@@ -30,9 +30,14 @@ public class MultiThreadApplication {
 			
 			
 			CompletableFuture.supplyAsync(() -> new Assignment8(), cachedPool)
-							 .thenApplyAsync(baseCode.getNumbers(), cpuPool)
+//							 .thenApplyAsync(number -> baseCode.getNumbers(), cpuPool)
+							 .thenAcceptAsync(number -> baseCode.getNumbers());
+//							 .thenAcceptAsync(iterances -> System.out.println());
+							 
 //							 .thenAcceptAsync((Consumer<? super Assignment8>) baseCode.getNumbers(), cpuPool);
 		}
 		
 	}
+	
+	//then run instead of then applyasync
 }
