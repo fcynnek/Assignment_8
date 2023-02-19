@@ -30,7 +30,8 @@ public class MultiThreadApplication {
 			
 			
 			CompletableFuture.supplyAsync(() -> new Assignment8())
-							 .thenAcceptAsync(numbers -> listOfNumbers.addAll(baseCode.getNumbers()));
+							 .thenAccept(numbers -> listOfNumbers.addAll(baseCode.getNumbers()))
+							 .completeAsync();
 //							 .thenApplyAsync(number -> baseCode.getNumbers(), cpuPool)
 //							 .thenAcceptAsync(number -> baseCode.getNumbers());
 //							 .thenAcceptAsync(iterances -> System.out.println());
