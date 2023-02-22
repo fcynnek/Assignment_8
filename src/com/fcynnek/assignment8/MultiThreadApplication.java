@@ -19,20 +19,24 @@ import com.coderscampus.assignment.Assignment8;
 
 public class MultiThreadApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		
 		Assignment8 baseCode = new Assignment8();
 		ExecutorService cachedPool = Executors.newCachedThreadPool();
 		ExecutorService cpuPool = Executors.newFixedThreadPool(6);
 		List<Integer> listOfNumbers = new ArrayList<Integer>();
 		Map<Integer, Integer> countOfNumbers = new HashMap<>();
+		List<CompletableFuture<Void>> listOfFutures = new ArrayList<>();
+		
 		
 		for (int i=0; i<1000; i++) {
 //			listOfNumbers.addAll(baseCode.getNumbers());
 //			System.out.println(listOfNumbers);
 			
 			
-			CompletableFuture.supplyAsync(() -> listOfNumbers.addAll(baseCode.getNumbers()), cachedPool);
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> listOfNumbers.addAll(baseCode.getNumbers()), cachedPool);
+			listOfFutures.add(future);
+			
 //			CompletableFuture.supplyAsync(() -> listOfNumbers.addAll(baseCode.getNumbers()), cpuPool);
 //			CompletableFuture.supplyAsync(() -> ((List<Integer>) countOfNumbers).addAll(baseCode.getNumbers()), cachedPool);
 //			CompletableFuture.supplyAsync(() -> ((List<Integer>) countOfNumbers).addAll(baseCode.getNumbers()), cpuPool);
@@ -45,27 +49,32 @@ public class MultiThreadApplication {
 //							 .thenAcceptAsync((Consumer<? super Assignment8>) baseCode.getNumbers(), cpuPool);
 		}
 		
+		for (int i=0; i<1000; i++) {
+			listOfFutures.get(i).get();
+
+		}
+		
 //		for (Integer number : listOfNumbers) {
 //			countOfNumbers.compute(number, (k, v) -> v == null ? 1 : v + 1);
 //		}
 //		for (int i=0; i<=1000000; i++) {
-//			listOfNumbers.forEach(number -> {
-//				if (countOfNumbers.containsKey(number)) {
-//					countOfNumbers.put(number, countOfNumbers.get(countOfNumbers) + 1);
-//				} else {
-//					countOfNumbers.put(number, 1);
-//				}
-//			});
+			listOfNumbers.forEach(number -> {
+				if (countOfNumbers.containsKey(number)) {
+					countOfNumbers.put(number, countOfNumbers.get(number) + 1);
+				} else {
+					countOfNumbers.put(number, 1);
+				}
+			});
 //		}
-//
-//		countOfNumbers.forEach((k, v) -> System.out.println(k + ": " + v));
+
+		countOfNumbers.forEach((k, v) -> System.out.println(k + ": " + v));
 		
-		listOfNumbers.stream()
-					 .forEach(number -> {
-						 Integer key = listOfNumbers.get(number);
-						 Integer value = listOfNumbers.get(key) + 1;
-						 countOfNumbers.put(key, value);
-					 });
-		countOfNumbers.forEach((key, value) -> System.out.println(key + ": " + value));
+//		listOfNumbers.stream()
+//					 .forEach(number -> {
+//						 Integer key = listOfNumbers.get(number);
+//						 Integer value = listOfNumbers.get(key) + 1;
+//						 countOfNumbers.put(key, value);
+//					 });
+//		countOfNumbers.forEach((key, value) -> System.out.println(key + ": " + value));
 	}
 }
