@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +26,7 @@ public class MultiThreadApplication {
 		ExecutorService cachedPool = Executors.newCachedThreadPool();
 //		ExecutorService cpuPool = Executors.newFixedThreadPool(6);
 		List<Integer> listOfNumbers = new ArrayList<Integer>();
-		Map<Integer, Integer> countOfNumbers = new HashMap<>();
+		Map<Integer, Integer> countOfNumbers = new ConcurrentHashMap<>();
 		List<CompletableFuture<Void>> listOfFutures = new ArrayList<>();
 		
 		
@@ -39,13 +40,21 @@ public class MultiThreadApplication {
 		for (int i=0; i<1000; i++) {
 			listOfFutures.get(i).get();
 		}
+		CompletableFuture.allOf(listOfFutures.toArray(new CompletableFuture[0])).join();
 		
 		listOfNumbers.forEach(number -> {
-			if (countOfNumbers.containsKey(number)) {
-				countOfNumbers.put(number, countOfNumbers.get(number) + 1);
-			} else {
-				countOfNumbers.put(number, 1);
-			}
+//			if (countOfNumbers.containsKey(number)) {
+//				countOfNumbers.put(number, countOfNumbers.get(number) + 1);
+//			} else {
+//				countOfNumbers.put(number, 1);
+//			}
+			countOfNumbers.compute(number, (k, v) -> {
+				if (v == null) {
+					return 1;
+				} else {
+					return v + 1;
+				}
+			});
 		});
 
 		countOfNumbers.forEach((k, v) -> System.out.println(k + ": " + v));
