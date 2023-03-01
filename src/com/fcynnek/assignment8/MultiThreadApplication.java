@@ -29,6 +29,7 @@ public class MultiThreadApplication {
 //		ExecutorService cpuPool = Executors.newFixedThreadPool(6);
 		List<Integer> listOfNumbers = new ArrayList<>();
 //		List<AtomicInteger> listOfNumbers = new ArrayList<>();
+		Collection<Integer> listOfNumbers = Collections.synchronizedCollection(new ArrayList<>());
 		Map<Integer, AtomicInteger> countOfNumbers = new HashMap<>();
 		List<CompletableFuture<Void>> listOfFutures = new ArrayList<>();
 		
