@@ -38,36 +38,23 @@ public class MultiThreadApplication {
 		for (int i=0; i<1000; i++) {
 			
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> listOfNumbers.addAll(baseCode.getNumbers()), cachedPool);
-			
-//			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-//				List<Integer> numbers = baseCode.getNumbers();
-//				for (int number : numbers) {
-//					AtomicInteger atomicNum = new AtomicInteger(number);
-//					listOfNumbers.addAll(atomicNum);
-//				}
-//			}, cachedPool);
-			
 			listOfFutures.add(future);
-			
 		}
+		
 		
 		for (int i=0; i<1000; i++) {
 			listOfFutures.get(i).get();				
 		}
+		
+		
 		CompletableFuture.allOf(listOfFutures.toArray(new CompletableFuture[0])).join();
+		
 		
 		while (listOfFutures.stream().filter(CompletableFuture :: isDone).count() < 1000) {
 //			System.out.println(listOfFutures.stream().filter(CompletableFuture :: isDone).count());
 		}
 		
-//		listOfNumbers.forEach(number -> {
-					
-//				if (countOfNumbers.containsKey(number)) {
-//					countOfNumbers.put(number, countOfNumbers.get(number) + 1);
-//				} else {
-//					countOfNumbers.put(number, 1);
-//				}
-//			}
+		
 		for (Integer number : listOfNumbers) {
 			
 			synchronized (countOfNumbers) {
