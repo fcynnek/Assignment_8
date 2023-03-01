@@ -2,6 +2,7 @@ package com.fcynnek.assignment8;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,9 @@ public class MultiThreadApplication {
 		Assignment8 baseCode = new Assignment8();
 		ExecutorService cachedPool = Executors.newCachedThreadPool();
 //		ExecutorService cpuPool = Executors.newFixedThreadPool(6);
-		List<Integer> listOfNumbers = new ArrayList<>();
+//		List<Integer> listOfNumbers = new ArrayList<>();
 //		List<AtomicInteger> listOfNumbers = new ArrayList<>();
+		Collection<Integer> listOfNumbers = Collections.synchronizedCollection(new ArrayList<>());
 		Map<Integer, AtomicInteger> countOfNumbers = new HashMap<>();
 		List<CompletableFuture<Void>> listOfFutures = new ArrayList<>();
 		
@@ -71,7 +73,7 @@ public class MultiThreadApplication {
 			synchronized (countOfNumbers) {
 				countOfNumbers.compute(number, (k, v) -> {
 					if (v == null) {
-						v = new AtomicInteger();
+						v = new AtomicInteger(1);
 					} else {
 						synchronized (v) {
 							v.incrementAndGet();
