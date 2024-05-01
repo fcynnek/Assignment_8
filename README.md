@@ -1,2 +1,5 @@
 # Assignment_8
-K. Cheng's Assignment #8 for Coders Campus Bootcamp
+
+Assignment #8 for Coders Campus Bootcamp
+
+This assignment was to write asynchronous code.
